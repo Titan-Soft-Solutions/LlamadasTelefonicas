@@ -1,0 +1,14 @@
+#Fat Jar Configuration File
+#Mon Dec 03 23:05:11 CET 2012
+onejar.license.required=true
+manifest.classpath=
+manifest.removesigners=true
+onejar.checkbox=false
+jarname=LlamadasProcesadorNoOptimizado_fat.jar
+manifest.mergeall=true
+manifest.mainclass=
+manifest.file=<createnew>
+jarname.isextern=false
+onejar.expand=
+excludes=<po|LlamadasProcesadorNoOptimizado>~edu/~uclm/~esi/~iso3/~llamadas/~procesador/~dominio/~Cliente.class;<po|LlamadasProcesadorNoOptimizado>~edu/~uclm/~esi/~iso3/~llamadas/~procesador/~dominio/~Control.class;<po|LlamadasProcesadorNoOptimizado>~edu/~uclm/~esi/~iso3/~llamadas/~procesador/~dominio/~Factura.class;<po|LlamadasProcesadorNoOptimizado>~edu/~uclm/~esi/~iso3/~llamadas/~procesador/~dominio/~LineaFactura.class;<po|LlamadasProcesadorNoOptimizado>~edu/~uclm/~esi/~iso3/~llamadas/~procesador/~dominio/~ProcesadorDeLlamadas.class;<po|LlamadasGenerador>;<po|LlamadasProcesadorOptimizado>;<jar|LlamadasProcesadorInterfazIVentana_fat.jar>;<jar|junit.jar>;<jar|org.hamcrest.core_1.1.0.v20090501071000.jar>;<jar|LlamadasProcesadorInterfazIVentana_fat.jar>
+includes=
