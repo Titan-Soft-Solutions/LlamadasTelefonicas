@@ -26,7 +26,7 @@ import edu.uclm.esi.iso3.llamadas.procesador.gui.IVentana;
 
 
 public class ProcesadorDeLlamadasTest extends TestCase implements IVentana {
-	private String directorioRaiz="/Users/Maco/Desktop/resources";
+	private String directorioRaiz="C:\\Users\\SrKlein\\workspace\\resources";
 	private Cliente clienteTarifaPlana, cliente50Minutos, clienteFinDeSemana, clienteTardes;
 	private ProcesadorDeLlamadas procesador;
 
@@ -196,7 +196,7 @@ public class ProcesadorDeLlamadasTest extends TestCase implements IVentana {
 		catch (ClassNotFoundException e) {
 			fail("Error al abrir el fichero: " + fileName + "; " + e.toString());;
 		}
-		double esperado=Factura.redondear(15+2*0.10);
+		double esperado=Factura.redondear(15+2*0.15);
 		double obtenido=Factura.redondear(factura.getImporteSinIVA());
 		assertTrue("Esperaba: " + esperado + "; obtenido: " + obtenido, obtenido==esperado);
 	}
@@ -204,20 +204,35 @@ public class ProcesadorDeLlamadasTest extends TestCase implements IVentana {
 	public void testTarifa50MinutosConsume100Minutos() {
 		// Hace 100 llamadas de 60 segundos cada una (100 llamadas de 1 minuto)
 		// Se le deben facturar 50 establecimientos de llamada y 3000 segundos 
+		
+		//PARTE1 GENERACION 100 LLAMADAS
+		long initTime=System.currentTimeMillis();
+		
 		for (int i=1; i<=100; i++) {
 			Llamada call = crearLlamada(cliente50Minutos, 60);
 			String fileName=this.directorioRaiz + Constantes.llamadasRecibidas + i + ".txt";
 			guardarLlamada(call, fileName);
 		}
-			
+		
+		long endTime=System.currentTimeMillis();
+		System.out.println("PARTE 1: "+(endTime-initTime)+" milesimas");
+		
+		//PARTE2 PROCESO DE FACTURACION
+		initTime=System.currentTimeMillis();
 		this.procesador.run();
+		endTime=System.currentTimeMillis();
+		System.out.println("PARTE 2: "+(endTime-initTime)+" milesimas");
 
+		//PARTE 3 100 ORACULOS
+		initTime=System.currentTimeMillis();
 		for (int i=1; i<=100; i++) {
 			String fileName=this.directorioRaiz + Constantes.llamadasRecibidas + i + ".txt";
 			comprobarQueNoExiste(fileName);
 			fileName=this.directorioRaiz + Constantes.llamadasProcesadas + i + ".txt";
 			comprobarQueSeHaMovido(fileName);
 		}
+		endTime=System.currentTimeMillis();
+		System.out.println("PARTE 3: "+(endTime-initTime)+" milesimas");
 		
 		Factura factura=null;
 		String fileName=null;
@@ -237,11 +252,12 @@ public class ProcesadorDeLlamadasTest extends TestCase implements IVentana {
 			fail("Error al abrir el fichero: " + fileName + "; " + e.toString());;
 		}
 		double cuotaFija=15;
-		double cuotaPorEstablecimiento=100*0.10;
-		double cuotaPorSegundos=3000*0.01;
+		double cuotaPorEstablecimiento=100*0.15;//MODIFICADO,ANTES ESPERABA 10 CENTS POR ESTABL.
+		double cuotaPorSegundos=3000*0.01;//50 llamadas despues del limite
 		double esperado=Factura.redondear(cuotaFija+cuotaPorEstablecimiento+cuotaPorSegundos);
 		double obtenido=Factura.redondear(factura.getImporteSinIVA());
 		assertTrue("Esperaba: " + esperado + "; obtenido: " + obtenido, obtenido==esperado);
+		assertTrue(factura.getNumeroDeLineas()==100);//MODIFICADO,NO EXISTIA ANTES
 	}
 	
 	public void testTarifa50MinutosConsume51Minutos() {
@@ -279,7 +295,7 @@ public class ProcesadorDeLlamadasTest extends TestCase implements IVentana {
 			fail("Error al abrir el fichero: " + fileName + "; " + e.toString());;
 		}
 		double cuotaFija=15;
-		double cuotaPorEstablecimiento=2*0.10;
+		double cuotaPorEstablecimiento=2*0.15;//MODIFICADO, ESPERABA 10 CENTS
 		double cuotaPorSegundos=60*0.01;
 		double esperado=Factura.redondear(cuotaFija+cuotaPorEstablecimiento+cuotaPorSegundos);
 		double obtenido=Factura.redondear(factura.getImporteSinIVA());
@@ -429,7 +445,7 @@ public class ProcesadorDeLlamadasTest extends TestCase implements IVentana {
 		String fileName2=this.directorioRaiz + Constantes.llamadasRecibidas + "2.txt";
 		guardarLlamada(call2, fileName2);
 		Llamada call3 = crearLlamada(clienteTardes, 60, 2012, 10, 15, 14, 0, 0);
-		String fileName3=this.directorioRaiz + Constantes.llamadasRecibidas + "2.txt";
+		String fileName3=this.directorioRaiz + Constantes.llamadasRecibidas + "3.txt";//ANTES ERA 2.txt
 		guardarLlamada(call3, fileName3);
 		
 		this.procesador.run();
@@ -462,7 +478,7 @@ public class ProcesadorDeLlamadasTest extends TestCase implements IVentana {
 		double esperado=Factura.redondear(cuotaFija+cuotaPorEstablecimiento+cuotaPorSegundos);
 		double obtenido=Factura.redondear(factura.getImporteSinIVA());
 		assertTrue("Esperaba: " + esperado + "; obtenido: " + obtenido, obtenido==esperado);
-		assertTrue(factura.getNumeroDeLineas()==2);
+		assertTrue(factura.getNumeroDeLineas()==3);//MODIFICADO, ESPERABA 2 LINEAS
 	}
 	
 	public void testTarifaTardesHace100LlamadasPorLaManana() {

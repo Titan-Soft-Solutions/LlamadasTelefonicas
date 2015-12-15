@@ -67,17 +67,36 @@ public class Factura implements Serializable {
 
 	public static void procesarLlamada(String directorioRaiz, String fichero, IVentana ventana) throws IOException, ClassNotFoundException {
 		Factura.directorio=directorioRaiz;
-		mover(directorioRaiz, fichero);
 
+		//PARTE1
+		long initTime=System.currentTimeMillis();
+		mover(directorioRaiz, fichero);
+		
 		FileInputStream fis=new FileInputStream(directorioRaiz + Constantes.llamadasProcesadas + fichero);
 		ObjectInputStream ois=new ObjectInputStream(fis);
 		Llamada call=(Llamada) ois.readObject();
 		fis.close();
+		long endTime=System.currentTimeMillis();
+		System.out.println("ProcesarLlamadas 1: "+(endTime-initTime)+" milesimas");
+		
+		
+		//PARTE 2
+		initTime=System.currentTimeMillis();
 		Cliente cliente=Control.getControl(directorioRaiz).findClienteByNumero(call.getOrigen());
+		endTime=System.currentTimeMillis();
+		System.out.println("ProcesarLlamadas 2: "+(endTime-initTime)+" milesimas");
+		
+		//PARTE 3
+		initTime=System.currentTimeMillis();
 		Factura f=tieneFactura(directorioRaiz, cliente);
 		if (f==null) {
 			f=new Factura(call);
 		}
+		endTime=System.currentTimeMillis();
+		System.out.println("ProcesarLlamadas 3: "+(endTime-initTime)+" milesimas");
+		
+		//PARTE 4
+		initTime=System.currentTimeMillis();
 		ventana.showInfo(call.toString());
 		f.add(call);
 		fichero=Factura.directorio + Constantes.facturas + call.getOrigen() + ".txt";
@@ -85,6 +104,8 @@ public class Factura implements Serializable {
 		ObjectOutputStream oos=new ObjectOutputStream(fos);
 		oos.writeObject(f);
 		fos.close();
+		endTime=System.currentTimeMillis();
+		System.out.println("ProcesarLlamadas 4: "+(endTime-initTime)+" milesimas");
 	}
 
 	private void add(Llamada call) {
@@ -166,12 +187,12 @@ public class Factura implements Serializable {
 			return 0.15;
 		} 
 		if (cliente.getTarifa()==Constantes.CINCUENTA_MINUTOS) {
-			double result=0.10;
+			double result=0.15;//MODIFICACION, ORIGINALMENTE SUMABA 10 CENTS DE ESTABLECIMIENTO
 			int tiempoTotal=factura.getTiempoTotal();
 			if (cliente.getTarifa()==Constantes.CINCUENTA_MINUTOS && tiempoTotal>=60*50) {
 				result+=0.01*call.getDuracion();
 			} else if (cliente.getTarifa()==Constantes.CINCUENTA_MINUTOS && tiempoTotal<60*50) {
-				result+=0;
+				result+=0;//PARA OPTIMIZACION QUITAR TODO EL ELSE
 			}
 			return result;
 		}

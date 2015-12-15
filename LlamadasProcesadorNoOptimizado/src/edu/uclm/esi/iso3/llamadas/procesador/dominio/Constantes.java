@@ -2,9 +2,9 @@ package edu.uclm.esi.iso3.llamadas.procesador.dominio;
 
 public class Constantes {
 	//public static String directorioRaiz = "/Users/Maco/Documents/workspaceAspectJ/LlamadasGenerador/resources";
-	public static String llamadasRecibidas="/llamadasRecibidas/";
-	public static String llamadasProcesadas="/llamadasProcesadas/";
-	public static String facturas="/facturas/";
+	public static String llamadasRecibidas="\\llamadasRecibidas\\";
+	public static String llamadasProcesadas="\\llamadasProcesadas\\";
+	public static String facturas="\\facturas\\";
 	
 	public static final int PLANA = 0;	// Cuota fija: 250 euros; establec. llamada: 0,15
 	public static final int CINCUENTA_MINUTOS = 1;	// Cuota fija: 25 euros; 50 minutos gratis; luego, establecimiento: 0,20 + 0,01 euros/segundo

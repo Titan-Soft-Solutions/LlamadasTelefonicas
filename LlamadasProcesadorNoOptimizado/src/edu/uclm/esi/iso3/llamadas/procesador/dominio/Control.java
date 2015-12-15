@@ -31,6 +31,15 @@ public class Control {
 		BufferedReader br = new BufferedReader(new InputStreamReader(dis));
 		String linea = br.readLine();
 		while ((linea = br.readLine()) != null)   {
+			
+			//String[] tokens = linea.split("\t");
+			//String sId=tokens[0];
+			//String nombre=tokens[1];
+			//...
+			//StringTokenizer st=new StringTokenizer(linea,"/t");
+			//String sId = st.nextToken();
+			//String nombre = st.nextToken();
+			
 			String sId="";
 			int id;
 			String nombre="", apellido="", dni="", telefono="";
