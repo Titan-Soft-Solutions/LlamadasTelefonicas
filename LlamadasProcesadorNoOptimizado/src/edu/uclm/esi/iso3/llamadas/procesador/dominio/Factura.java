@@ -205,7 +205,8 @@ public class Factura implements Serializable {
 			if (cliente.getTarifa()==Constantes.FIN_DE_SEMANA && diaSemana==Calendar.SATURDAY) {
 				result=0;
 			} else
-			if (cliente.getTarifa()==Constantes.FIN_DE_SEMANA && diaSemana!=Calendar.SATURDAY || diaSemana!=Calendar.SUNDAY) {
+			//if (cliente.getTarifa()==Constantes.FIN_DE_SEMANA && diaSemana!=Calendar.SATURDAY || diaSemana!=Calendar.SUNDAY) {
+		    if (cliente.getTarifa()==Constantes.FIN_DE_SEMANA && diaSemana!=Calendar.SATURDAY && diaSemana!=Calendar.SUNDAY) {
 				result= 0.35+0.01*call.getDuracion();
 			}
 			return result;

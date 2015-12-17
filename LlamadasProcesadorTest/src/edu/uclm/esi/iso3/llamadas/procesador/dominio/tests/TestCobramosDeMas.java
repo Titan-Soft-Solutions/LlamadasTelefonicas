@@ -25,7 +25,7 @@ import edu.uclm.esi.iso3.llamadas.procesador.dominio.Factura;
 import edu.uclm.esi.iso3.llamadas.procesador.gui.IVentana;
 
 
-public class ProcesadorDeLlamadasTest extends TestCase implements IVentana {
+public class TestCobramosDeMas extends TestCase implements IVentana {
 	private String directorioRaiz="C:\\Users\\duende\\workspace\\LlamadasTelefonicas\\resources";
 	private Cliente clienteTarifaPlana, cliente50Minutos, clienteFinDeSemana, clienteTardes;
 	private ProcesadorDeLlamadas procesador;
@@ -309,7 +309,7 @@ public class ProcesadorDeLlamadasTest extends TestCase implements IVentana {
 		Llamada call1 = crearLlamada(clienteFinDeSemana, 3000, 2012, 12, 1);
 		String fileName1=this.directorioRaiz + Constantes.llamadasRecibidas + "1.txt";
 		guardarLlamada(call1, fileName1);
-		Llamada call2 = crearLlamada(clienteFinDeSemana, 60, 2012, 12, 1);
+		Llamada call2 = crearLlamada(clienteFinDeSemana, 60, 2012, 12, 2);
 		String fileName2=this.directorioRaiz + Constantes.llamadasRecibidas + "2.txt";
 		guardarLlamada(call2, fileName2);
 		
@@ -395,7 +395,7 @@ public class ProcesadorDeLlamadasTest extends TestCase implements IVentana {
 	public void testTarifaTardesHablaPorLaTarde() {
 		// Hace 1 llamada de 50 minutos a las 17 h y otra de 1 minuto a las 20 h.
 		// Se le debe facturar solamente la cuota fija 
-		Llamada call1 = crearLlamada(clienteTardes, 3000, 2012, 10, 15, 17, 0, 0);
+		Llamada call1 = crearLlamada(clienteTardes, 3000, 2012, 10, 15, 16, 0, 0);
 		String fileName1=this.directorioRaiz + Constantes.llamadasRecibidas + "1.txt";
 		guardarLlamada(call1, fileName1);
 		Llamada call2 = crearLlamada(clienteTardes, 60, 2012, 10, 15, 20, 0, 0);
@@ -485,7 +485,7 @@ public class ProcesadorDeLlamadasTest extends TestCase implements IVentana {
 		// Hace 100 llamada de 5 minutos a las 11:00:00
 		// Se le debe facturar la cuota fija, 100 establecimientos y 30000 segundos 
 		for (int i=1; i<=100; i++) {
-			Llamada call = crearLlamada(clienteTardes, 300, 2012, 10, 15, 11, 0, 0);
+			Llamada call = crearLlamada(clienteTardes, 300, 2012, 10, i%30, i%23, 1, 0);
 			String fileName=this.directorioRaiz + Constantes.llamadasRecibidas + i + ".txt";
 			guardarLlamada(call, fileName);
 		}
