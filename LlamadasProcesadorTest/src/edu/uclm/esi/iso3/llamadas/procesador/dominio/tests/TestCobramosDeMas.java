@@ -375,7 +375,7 @@ public class TestCobramosDeMas extends TestCase implements IVentana {
 	 * El comportamiento esperado es:
 	 * Cobrara la cuota fija, 3 establecimientos de llamada y 2999seg
 	 */	
-public void testTarifa50MinutosOrdenacionFicheros(){
+/*public void testTarifa50MinutosOrdenacionFicheros(){
 		
 		Llamada call1 = crearLlamada(cliente50Minutos, 1,2015,Calendar.DECEMBER,20,0,0,0);
 		String fileName1=this.directorioRaiz + Constantes.llamadasRecibidas + "1.txt";
@@ -421,7 +421,7 @@ public void testTarifa50MinutosOrdenacionFicheros(){
 		double obtenido=Factura.redondear(factura.getImporteSinIVA());
 		assertTrue("Esperaba: " + esperado + "; obtenido: " + obtenido, obtenido==esperado);
 		assertTrue(factura.getNumeroDeLineas()==3);
-	}
+	}*/
 	
 	public void testTarifaFinDeSemanaHablaUnSabado() {
 		// El 19-12-2015 es sabado a las 0:0:0, 15:15:15 y 23:59:59
