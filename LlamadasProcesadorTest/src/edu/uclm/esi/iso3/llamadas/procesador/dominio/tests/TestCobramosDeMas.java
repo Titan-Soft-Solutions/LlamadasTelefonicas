@@ -54,11 +54,25 @@ public class TestCobramosDeMas extends TestCase implements IVentana {
 
 	public void tearDown() throws Exception {
 	}
-	
+	public void testCrearLlamadaAleatoria(){
+		
+		try{
+			Llamada call = new Llamada(699999999);
+			
+		}catch(Exception e){
+			fail("Fallo al crear llamadas aleatorias: ");
+			
+		}
+		
+		
+		
+		
+		
+	}
 	public void testTarifaPlana1Llamada() {
 		// Creamos una llamada de 100 segundos
 		
-		Llamada call = crearLlamada(clienteTarifaPlana, 100);
+		Llamada call = crearLlamada(clienteTarifaPlana, 3000);
 		// La vamos a guardar en el directorio de llamadas recibidas
 		String fileName=this.directorioRaiz + Constantes.llamadasRecibidas + "1.txt";
 		

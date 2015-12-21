@@ -26,8 +26,8 @@ public class Llamada implements Serializable {
 		} else {
 			this.duracion=r.nextInt(3000);
 		}
-		//this.fecha=this.fechaAleatoriaCalendar(2012, 10);
-		this.fecha=Calendar.getInstance();
+		this.fecha=this.fechaAleatoriaCalendar(2012, 10);
+		//this.fecha=Calendar.getInstance();
 	}
 
 	public Llamada(String origen, String destino, int duracion, int year, int mes, int dia, int hora, int minuto, int segundo) {
