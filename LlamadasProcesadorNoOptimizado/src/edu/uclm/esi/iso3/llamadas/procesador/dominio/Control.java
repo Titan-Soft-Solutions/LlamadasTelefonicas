@@ -30,7 +30,9 @@ public class Control {
 		DataInputStream dis = new DataInputStream(fis);
 		BufferedReader br = new BufferedReader(new InputStreamReader(dis));
 		String linea = br.readLine();
-		while ((linea = br.readLine()) != null)   {
+		boolean encontrado = false;//AGREGADO PARA MEJORAR RENDIMIENTO
+		//while (((linea = br.readLine()) != null))   {
+		while (((linea = br.readLine()) != null) && !encontrado)   {
 			
 			//String[] tokens = linea.split("\t");
 			//String sId=tokens[0];
@@ -66,14 +68,25 @@ public class Control {
 			for (int j=i; linea.charAt(i)!='\t'; j++, i++) {
 				telefono=telefono+linea.charAt(i);
 			}
-			i++;
+			
+			/*i++;
 			for (int j=i; j<linea.length(); j++, i++) {
 				sTarifa=sTarifa+linea.charAt(i);
 			}
 			tarifa=Integer.parseInt(sTarifa);
 			Cliente c=new Cliente(id, nombre, apellido, dni, telefono, tarifa);
 			if (c.getTelefono().equals(numero)) 
-				result=c;
+				result=c;*/
+			if (telefono.equals(numero))
+			{
+				encontrado = true;
+				i++;
+				for (int j=i; j<linea.length(); j++, i++) {
+					sTarifa=sTarifa+linea.charAt(i);
+				}
+				tarifa=Integer.parseInt(sTarifa);
+				result = new Cliente(id, nombre, apellido, dni, telefono, tarifa);
+			}
 		}
 		fis.close();
 		return result;

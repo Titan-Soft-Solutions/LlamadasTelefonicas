@@ -99,6 +99,7 @@ public class Factura implements Serializable {
 		initTime=System.currentTimeMillis();
 		ventana.showInfo(call.toString());
 		f.add(call);
+		
 		fichero=Factura.directorio + Constantes.facturas + call.getOrigen() + ".txt";
 		FileOutputStream fos=new FileOutputStream(fichero);
 		ObjectOutputStream oos=new ObjectOutputStream(fos);
@@ -110,7 +111,14 @@ public class Factura implements Serializable {
 
 	private void add(Llamada call) {
 		LineaFactura linea=new LineaFactura(this, call);
+<<<<<<< HEAD
 		System.out.println("importe"+linea.getImporte());
+=======
+		//AGREGADOS PRINTLN PARA PODER TRAZAR MEJOR EL COMPORTAMIENTO DEL PROGRAMA
+		System.out.println(call.getFecha().getTime().toString());
+		System.out.println(linea.getImporte());
+		/////////////////////////////////////////////////////////////////////////
+>>>>>>> origin/master
 		this.lineas.add(linea);
 	}
 
@@ -207,7 +215,7 @@ public class Factura implements Serializable {
 				result=0;
 			} else
 			//if (cliente.getTarifa()==Constantes.FIN_DE_SEMANA && diaSemana!=Calendar.SATURDAY || diaSemana!=Calendar.SUNDAY) {
-		    if (cliente.getTarifa()==Constantes.FIN_DE_SEMANA && diaSemana!=Calendar.SATURDAY && diaSemana!=Calendar.SUNDAY) {
+			if (cliente.getTarifa()==Constantes.FIN_DE_SEMANA && diaSemana!=Calendar.SATURDAY && diaSemana!=Calendar.SUNDAY) {
 				result= 0.35+0.01*call.getDuracion();
 			}
 			return result;

@@ -27,7 +27,7 @@ import edu.uclm.esi.iso3.llamadas.procesador.gui.IVentana;
 
 
 public class TestCobramosDeMas extends TestCase implements IVentana {
-	private String directorioRaiz="C:\\Users\\duende\\workspace\\LlamadasTelefonicas\\resources";
+	private String directorioRaiz="C:\\Users\\SrKlein\\workspace\\resources";
 	private Cliente clienteTarifaPlana, cliente50Minutos, clienteFinDeSemana, clienteTardes;
 	private ProcesadorDeLlamadas procesador;
 
@@ -54,6 +54,7 @@ public class TestCobramosDeMas extends TestCase implements IVentana {
 
 	public void tearDown() throws Exception {
 	}
+<<<<<<< HEAD
 	public void testCrearLlamadaAleatoria(){
 		
 		try{
@@ -69,6 +70,78 @@ public class TestCobramosDeMas extends TestCase implements IVentana {
 		
 		
 	}
+=======
+	
+	public void test50MinutosClienteQueNoConsume() {
+		// Comprobamos que se ha creado el fichero de factura
+		Factura factura=null;
+		String fileName=this.directorioRaiz + Constantes.facturas + cliente50Minutos.getTelefono() + ".txt";
+		try {
+			FileInputStream fis=new FileInputStream(fileName);
+			ObjectInputStream ois=new ObjectInputStream(fis);
+			factura=(Factura) ois.readObject();
+			fis.close();
+		} catch (FileNotFoundException e) {
+			fail("Esperaba encontrar el fichero: " + fileName);
+		}
+		catch (IOException e) {
+			fail("Error al abrir el fichero: " + fileName + "; " + e.toString());
+		}
+		catch (ClassNotFoundException e) {
+			fail("Error al abrir el fichero: " + fileName + "; " + e.toString());;
+		}
+		double esperado=Factura.redondear(15);
+		double obtenido=Factura.redondear(factura.getImporteSinIVA());
+		assertTrue("Esperaba: " + esperado + "; obtenido: " + obtenido, obtenido==esperado);
+	}
+	
+	public void testFinDeSemanaClienteQueNoConsume() {
+		// Comprobamos que se ha creado el fichero de factura
+		Factura factura=null;
+		String fileName=this.directorioRaiz + Constantes.facturas + clienteFinDeSemana.getTelefono() + ".txt";
+		try {
+			FileInputStream fis=new FileInputStream(fileName);
+			ObjectInputStream ois=new ObjectInputStream(fis);
+			factura=(Factura) ois.readObject();
+			fis.close();
+		} catch (FileNotFoundException e) {
+			fail("Esperaba encontrar el fichero: " + fileName);
+		}
+		catch (IOException e) {
+			fail("Error al abrir el fichero: " + fileName + "; " + e.toString());
+		}
+		catch (ClassNotFoundException e) {
+			fail("Error al abrir el fichero: " + fileName + "; " + e.toString());;
+		}
+		double esperado=Factura.redondear(25);
+		double obtenido=Factura.redondear(factura.getImporteSinIVA());
+		assertTrue("Esperaba: " + esperado + "; obtenido: " + obtenido, obtenido==esperado);
+	}
+	
+	public void testTardesClienteQueNoConsume() {
+		// Comprobamos que se ha creado el fichero de factura
+		Factura factura=null;
+		String fileName=this.directorioRaiz + Constantes.facturas + clienteTardes.getTelefono() + ".txt";
+		try {
+			FileInputStream fis=new FileInputStream(fileName);
+			ObjectInputStream ois=new ObjectInputStream(fis);
+			factura=(Factura) ois.readObject();
+			fis.close();
+		} catch (FileNotFoundException e) {
+			fail("Esperaba encontrar el fichero: " + fileName);
+		}
+		catch (IOException e) {
+			fail("Error al abrir el fichero: " + fileName + "; " + e.toString());
+		}
+		catch (ClassNotFoundException e) {
+			fail("Error al abrir el fichero: " + fileName + "; " + e.toString());;
+		}
+		double esperado=Factura.redondear(25);
+		double obtenido=Factura.redondear(factura.getImporteSinIVA());
+		assertTrue("Esperaba: " + esperado + "; obtenido: " + obtenido, obtenido==esperado);
+	}
+	
+>>>>>>> origin/master
 	public void testTarifaPlana1Llamada() {
 		// Creamos una llamada de 100 segundos
 		
@@ -308,7 +381,65 @@ public class TestCobramosDeMas extends TestCase implements IVentana {
 		assertTrue(factura.getNumeroDeLineas()==3);
 	}
 	
-	
+	/**
+	 * En este caso de prueba se comprobará que el comportamiento del programa
+	 * sea el esperado con respecto a la ordenación de los ficheros de llamadas
+	 * 
+	 * Se realizarán las siguientes llamadas:
+	 * Domingo 20/12/2015 a las 0:0:0 y dura 1seg, almacenado en 1.txt
+	 * Lunes 21/12/2015 a las 16:0:0 y dura 5000 seg, almacenado en 2.txt
+	 * Sabado 26/12/2015 a las 23:59:58 y dura 2999seg, almacenado en 11.txt
+	 * 
+	 * El comportamiento esperado es:
+	 * Cobrara la cuota fija, 3 establecimientos de llamada y 2999seg
+	 */	
+/*public void testTarifa50MinutosOrdenacionFicheros(){
+		
+		Llamada call1 = crearLlamada(cliente50Minutos, 1,2015,Calendar.DECEMBER,20,0,0,0);
+		String fileName1=this.directorioRaiz + Constantes.llamadasRecibidas + "1.txt";
+		guardarLlamada(call1, fileName1);
+		
+		Llamada call2 = crearLlamada(cliente50Minutos, 5000,2015,Calendar.DECEMBER,21,16, 0, 0);
+		String fileName2=this.directorioRaiz + Constantes.llamadasRecibidas + "2.txt";
+		guardarLlamada(call2, fileName2);
+		
+		Llamada call3 = crearLlamada(cliente50Minutos, 2999,2015,Calendar.DECEMBER,26,23, 59,59);
+		String fileName3=this.directorioRaiz + Constantes.llamadasRecibidas + "11.txt";
+		guardarLlamada(call3, fileName3);
+		
+		
+		this.procesador.run();
+		
+		for (int i=1; i<=3; i++) {
+			String fileName=this.directorioRaiz + Constantes.llamadasRecibidas + i + ".txt";
+			comprobarQueNoExiste(fileName);
+		}
+		
+		Factura factura=null;
+		String fileName=null;
+		try {
+			fileName=this.directorioRaiz + Constantes.facturas + cliente50Minutos.getTelefono() + ".txt";
+			FileInputStream fis=new FileInputStream(fileName);
+			ObjectInputStream ois=new ObjectInputStream(fis);
+			factura=(Factura) ois.readObject();
+			fis.close();
+		} catch (FileNotFoundException e) {
+			fail("Esperaba encontrar el fichero: " + fileName);
+		}
+		catch (IOException e) {
+			fail("Error al abrir el fichero: " + fileName + "; " + e.toString());
+		}
+		catch (ClassNotFoundException e) {
+			fail("Error al abrir el fichero: " + fileName + "; " + e.toString());;
+		}
+		double cuotaFija=15;
+		double cuotaPorEstablecimiento=3*0.15;//MODIFICADO, ESPERABA 10 CENTS
+		double cuotaPorSegundos=2999*0.01;
+		double esperado=Factura.redondear(cuotaFija+cuotaPorEstablecimiento+cuotaPorSegundos);
+		double obtenido=Factura.redondear(factura.getImporteSinIVA());
+		assertTrue("Esperaba: " + esperado + "; obtenido: " + obtenido, obtenido==esperado);
+		assertTrue(factura.getNumeroDeLineas()==3);
+	}*/
 	
 	public void testTarifaFinDeSemanaHablaUnSabado() {
 		// El 19-12-2015 es sabado a las 0:0:0, 15:15:15 y 23:59:59
@@ -356,11 +487,11 @@ public class TestCobramosDeMas extends TestCase implements IVentana {
 	}
 	
 	public void testTarifaFinDeSemanaHablaUnDomingo() {
-		// El 20-12-2015 es domingo a las 0:0:0, 15:15:15 y 23:59:59
+		// El 20-12-2015 es domingo a las 0:0:0, 15:59:59 y 23:59:59
 		Llamada call1 = crearLlamada(clienteFinDeSemana, 60, 2015, Calendar.DECEMBER, 20,0,0,0);	
 		String fileName1=this.directorioRaiz + Constantes.llamadasRecibidas + "1.txt";
 		guardarLlamada(call1, fileName1);
-		Llamada call2 = crearLlamada(clienteFinDeSemana, 60, 2015, Calendar.DECEMBER, 20,15,15,15);
+		Llamada call2 = crearLlamada(clienteFinDeSemana, 60, 2015, Calendar.DECEMBER, 20,15,59,59);
 		String fileName2=this.directorioRaiz + Constantes.llamadasRecibidas + "2.txt";
 		guardarLlamada(call2, fileName2);
 		Llamada call3 = crearLlamada(clienteFinDeSemana, 60, 2015, Calendar.DECEMBER, 20,23,59,59);
@@ -400,23 +531,27 @@ public class TestCobramosDeMas extends TestCase implements IVentana {
 		assertTrue(factura.getNumeroDeLineas()==3);
 	}
 	
-	public void testTarifaFinDeSemanaHablaUnViernesSabadoViernesLunes() {
+	public void testTarifaFinDeSemanaHablaUnViernesSabadoDomingoLunes() {
 		// El 18-12-2015 es viernes a las 23:59:59
-		// El 19-12-2015 es sabado a las 15:15:15
-		// El 20-12-2015 es lunes a las 0:0:0
+		// El 19-12-2015 es sabado a las 0:0:0
+		// El 20-12-2015 es sabado a las 23:59:59
+		// El 21-12-2015 es lunes a las 0:0:0
 		Llamada call1 = crearLlamada(clienteFinDeSemana, 60, 2015, Calendar.DECEMBER, 18,23,59,59);	
 		String fileName1=this.directorioRaiz + Constantes.llamadasRecibidas + "1.txt";
 		guardarLlamada(call1, fileName1);
-		Llamada call2 = crearLlamada(clienteFinDeSemana, 60, 2015, Calendar.DECEMBER, 19,15,15,15);
+		Llamada call2 = crearLlamada(clienteFinDeSemana, 60, 2015, Calendar.DECEMBER, 19,0,0,0);
 		String fileName2=this.directorioRaiz + Constantes.llamadasRecibidas + "2.txt";
 		guardarLlamada(call2, fileName2);
-		Llamada call3 = crearLlamada(clienteFinDeSemana, 60, 2015, Calendar.DECEMBER, 21,0,0,0);
+		Llamada call3 = crearLlamada(clienteFinDeSemana, 60, 2015, Calendar.DECEMBER, 20,23,59,59);
 		String fileName3=this.directorioRaiz + Constantes.llamadasRecibidas + "3.txt";
 		guardarLlamada(call3, fileName3);
+		Llamada call4 = crearLlamada(clienteFinDeSemana, 60, 2015, Calendar.DECEMBER, 21,0,0,0);
+		String fileName4=this.directorioRaiz + Constantes.llamadasRecibidas + "4.txt";
+		guardarLlamada(call4, fileName4);
 		
 		this.procesador.run();
 		
-		for (int i=1; i<=3; i++) {
+		for (int i=1; i<=4; i++) {
 			String fileName=this.directorioRaiz + Constantes.llamadasRecibidas + i + ".txt";
 			comprobarQueNoExiste(fileName);
 		}
@@ -444,7 +579,7 @@ public class TestCobramosDeMas extends TestCase implements IVentana {
 		double esperado=Factura.redondear(cuotaFija+cuotaPorEstablecimiento+cuotaPorSegundos);
 		double obtenido=Factura.redondear(factura.getImporteSinIVA());
 		assertTrue("Esperaba: " + esperado + "; obtenido: " + obtenido, obtenido==esperado);
-		assertTrue(factura.getNumeroDeLineas()==3);
+		assertTrue(factura.getNumeroDeLineas()==4);
 	}
 	
 	
