@@ -110,6 +110,7 @@ public class Factura implements Serializable {
 
 	private void add(Llamada call) {
 		LineaFactura linea=new LineaFactura(this, call);
+		System.out.println("importe"+linea.getImporte());
 		this.lineas.add(linea);
 	}
 
