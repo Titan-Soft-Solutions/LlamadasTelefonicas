@@ -26,7 +26,7 @@ import edu.uclm.esi.iso3.llamadas.procesador.gui.IVentana;
 
 
 public class ProcesadorDeLlamadasTest extends TestCase implements IVentana {
-	private String directorioRaiz="C:\\Users\\SrKlein\\workspace\\resources";
+	private String directorioRaiz="C:\\resources";
 	private Cliente clienteTarifaPlana, cliente50Minutos, clienteFinDeSemana, clienteTardes;
 	private ProcesadorDeLlamadas procesador;
 
@@ -483,22 +483,34 @@ public class ProcesadorDeLlamadasTest extends TestCase implements IVentana {
 	
 	public void testTarifaTardesHace100LlamadasPorLaManana() {
 		// Hace 100 llamada de 5 minutos a las 11:00:00
-		// Se le debe facturar la cuota fija, 100 establecimientos y 30000 segundos 
+		// Se le debe facturar la cuota fija, 100 establecimientos y 30000 segundos
+		
+		//
+		long initTime=System.currentTimeMillis();
 		for (int i=1; i<=100; i++) {
 			Llamada call = crearLlamada(clienteTardes, 300, 2012, 10, 15, 11, 0, 0);
 			String fileName=this.directorioRaiz + Constantes.llamadasRecibidas + i + ".txt";
 			guardarLlamada(call, fileName);
 		}
-			
+		long endTime=System.currentTimeMillis();
+		System.out.println("Parte 1: "+(endTime-initTime)+" milesimas");
+		
+		initTime=System.currentTimeMillis();
 		this.procesador.run();
+		endTime=System.currentTimeMillis();
+		System.out.println("Parte 2: "+(endTime-initTime)+" milesimas");
 
+		initTime=System.currentTimeMillis();
 		for (int i=1; i<=100; i++) {
 			String fileName=this.directorioRaiz + Constantes.llamadasRecibidas + i + ".txt";
 			comprobarQueNoExiste(fileName);
 			fileName=this.directorioRaiz + Constantes.llamadasProcesadas + i + ".txt";
 			comprobarQueSeHaMovido(fileName);
 		}
+		endTime=System.currentTimeMillis();
+		System.out.println("Parte 3: "+(endTime-initTime)+" milesimas");
 		
+		initTime=System.currentTimeMillis();
 		Factura factura=null;
 		String fileName=null;
 		try {
@@ -516,6 +528,10 @@ public class ProcesadorDeLlamadasTest extends TestCase implements IVentana {
 		catch (ClassNotFoundException e) {
 			fail("Error al abrir el fichero: " + fileName + "; " + e.toString());;
 		}
+		endTime=System.currentTimeMillis();
+		System.out.println("Parte 4: "+(endTime-initTime)+" milesimas");
+		
+		initTime=System.currentTimeMillis();
 		double cuotaFija=25;
 		double cuotaPorEstablecimiento=100*0.30;
 		double cuotaPorSegundos=30000*0.08;
@@ -523,6 +539,8 @@ public class ProcesadorDeLlamadasTest extends TestCase implements IVentana {
 		double obtenido=Factura.redondear(factura.getImporteSinIVA());
 		assertTrue("Esperaba: " + esperado + "; obtenido: " + obtenido, obtenido==esperado);
 		assertTrue(factura.getNumeroDeLineas()==100);
+		endTime=System.currentTimeMillis();
+		System.out.println("Parte 5: "+(endTime-initTime)+" milesimas");
 	}
 
 	private void comprobarQueSeHaMovido(String fileName) {

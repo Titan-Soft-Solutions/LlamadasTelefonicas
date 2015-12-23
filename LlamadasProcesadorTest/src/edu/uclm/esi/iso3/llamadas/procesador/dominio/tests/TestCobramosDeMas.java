@@ -27,7 +27,7 @@ import edu.uclm.esi.iso3.llamadas.procesador.gui.IVentana;
 
 
 public class TestCobramosDeMas extends TestCase implements IVentana {
-	private String directorioRaiz="C:\\Users\\SrKlein\\workspace\\resources";
+	private String directorioRaiz="C:\\resources";
 	private Cliente clienteTarifaPlana, cliente50Minutos, clienteFinDeSemana, clienteTardes;
 	private ProcesadorDeLlamadas procesador;
 
@@ -54,7 +54,6 @@ public class TestCobramosDeMas extends TestCase implements IVentana {
 
 	public void tearDown() throws Exception {
 	}
-<<<<<<< HEAD
 	public void testCrearLlamadaAleatoria(){
 		
 		try{
@@ -70,7 +69,6 @@ public class TestCobramosDeMas extends TestCase implements IVentana {
 		
 		
 	}
-=======
 	
 	public void test50MinutosClienteQueNoConsume() {
 		// Comprobamos que se ha creado el fichero de factura
@@ -140,8 +138,7 @@ public class TestCobramosDeMas extends TestCase implements IVentana {
 		double obtenido=Factura.redondear(factura.getImporteSinIVA());
 		assertTrue("Esperaba: " + esperado + "; obtenido: " + obtenido, obtenido==esperado);
 	}
-	
->>>>>>> origin/master
+
 	public void testTarifaPlana1Llamada() {
 		// Creamos una llamada de 100 segundos
 		

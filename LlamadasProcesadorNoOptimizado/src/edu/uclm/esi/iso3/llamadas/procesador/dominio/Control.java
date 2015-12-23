@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.StringTokenizer;
 import java.util.Vector;
 
 
@@ -34,15 +35,22 @@ public class Control {
 		//while (((linea = br.readLine()) != null))   {
 		while (((linea = br.readLine()) != null) && !encontrado)   {
 			
-			//String[] tokens = linea.split("\t");
-			//String sId=tokens[0];
-			//String nombre=tokens[1];
+			String[] tokens = linea.split("\t");
+			/*String sId=tokens[0];
+			String nombre=tokens[1];*/
+			String telefono = tokens[4];
 			//...
-			//StringTokenizer st=new StringTokenizer(linea,"/t");
-			//String sId = st.nextToken();
-			//String nombre = st.nextToken();
+			/*StringTokenizer st=new StringTokenizer(linea,"\t");
+			String sId = st.nextToken();
+			int id=Integer.parseInt(sId);
+			String nombre = st.nextToken();
+			String apellido = st.nextToken();
+			String dni = st.nextToken();
+			String telefono = st.nextToken();
+			String sTarifa = st.nextToken();
+			int tarifa=Integer.parseInt(sTarifa);*/
 			
-			String sId="";
+			/*String sId="";
 			int id;
 			String nombre="", apellido="", dni="", telefono="";
 			String sTarifa="";
@@ -67,7 +75,7 @@ public class Control {
 			i++;
 			for (int j=i; linea.charAt(i)!='\t'; j++, i++) {
 				telefono=telefono+linea.charAt(i);
-			}
+			}*/
 			
 			/*i++;
 			for (int j=i; j<linea.length(); j++, i++) {
@@ -80,12 +88,18 @@ public class Control {
 			if (telefono.equals(numero))
 			{
 				encontrado = true;
-				i++;
+				/*i++;
 				for (int j=i; j<linea.length(); j++, i++) {
 					sTarifa=sTarifa+linea.charAt(i);
-				}
-				tarifa=Integer.parseInt(sTarifa);
-				result = new Cliente(id, nombre, apellido, dni, telefono, tarifa);
+				}*/
+				/*String sId=tokens[0];
+				int id=Integer.parseInt(sId);
+				String nombre=tokens[1];
+				String apellido = tokens[2];
+				String dni = tokens[3];
+				String sTarifa = tokens[5];
+				int tarifa=Integer.parseInt(sTarifa);*/
+				result = new Cliente(Integer.parseInt(tokens[0]), tokens[1], tokens[2], tokens[3], telefono, Integer.parseInt(tokens[5]));
 			}
 		}
 		fis.close();

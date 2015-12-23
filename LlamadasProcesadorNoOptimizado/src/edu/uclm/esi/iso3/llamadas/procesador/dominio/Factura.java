@@ -82,9 +82,15 @@ public class Factura implements Serializable {
 		
 		//PARTE 2
 		initTime=System.currentTimeMillis();
-		Cliente cliente=Control.getControl(directorioRaiz).findClienteByNumero(call.getOrigen());
+		//Cliente cliente=Control.getControl(directorioRaiz).findClienteByNumero(call.getOrigen());
+		Control col = Control.getControl(directorioRaiz);
 		endTime=System.currentTimeMillis();
-		System.out.println("ProcesarLlamadas 2: "+(endTime-initTime)+" milesimas");
+		System.out.println("ProcesarLlamadas 2-1: "+(endTime-initTime)+" milesimas");
+		
+		initTime=System.currentTimeMillis();
+		Cliente cliente = col.findClienteByNumero(call.getOrigen());
+		endTime=System.currentTimeMillis();
+		System.out.println("ProcesarLlamadas 2-2: "+(endTime-initTime)+" milesimas");
 		
 		//PARTE 3
 		initTime=System.currentTimeMillis();
@@ -106,19 +112,18 @@ public class Factura implements Serializable {
 		oos.writeObject(f);
 		fos.close();
 		endTime=System.currentTimeMillis();
-		System.out.println("ProcesarLlamadas 4: "+(endTime-initTime)+" milesimas");
+		System.out.println("ProcesarLlamadas 4: "+(endTime-initTime)+" milesimas\n");
+		System.out.println("======================================================");
 	}
 
 	private void add(Llamada call) {
 		LineaFactura linea=new LineaFactura(this, call);
-<<<<<<< HEAD
 		System.out.println("importe"+linea.getImporte());
-=======
+		
 		//AGREGADOS PRINTLN PARA PODER TRAZAR MEJOR EL COMPORTAMIENTO DEL PROGRAMA
 		System.out.println(call.getFecha().getTime().toString());
 		System.out.println(linea.getImporte());
 		/////////////////////////////////////////////////////////////////////////
->>>>>>> origin/master
 		this.lineas.add(linea);
 	}
 
