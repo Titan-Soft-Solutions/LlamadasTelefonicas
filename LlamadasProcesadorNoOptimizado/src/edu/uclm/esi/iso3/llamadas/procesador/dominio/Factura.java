@@ -20,6 +20,16 @@ public class Factura implements Serializable {
 	private Vector<LineaFactura> lineas;
 	
 	private transient static String directorio;
+	
+	public Factura(Cliente cli) throws IOException{
+		this.cliente=cli;
+		this.lineas=new Vector<LineaFactura>();
+		String fichero=Factura.directorio + Constantes.facturas + cli.getTelefono() + ".txt";
+		FileOutputStream fos=new FileOutputStream(fichero);
+		ObjectOutputStream oos=new ObjectOutputStream(fos);
+		oos.writeObject(this);
+		fos.close();
+	}
 
 	public Factura(Llamada call) throws IOException {
 		this.cliente=Control.getControl(this.directorio).findClienteByNumero(call.getOrigen());
@@ -115,6 +125,12 @@ public class Factura implements Serializable {
 		System.out.println("ProcesarLlamadas 4: "+(endTime-initTime)+" milesimas\n");
 		System.out.println("======================================================");
 	}
+	
+	public static void procesarFacturasSinLlamadas(String directorioRaiz, Cliente cli) throws IOException{	
+		Factura.directorio=directorioRaiz;
+		Factura f= new Factura(cli);		
+	}
+	
 
 	private void add(Llamada call) {
 		LineaFactura linea=new LineaFactura(this, call);
@@ -182,9 +198,11 @@ public class Factura implements Serializable {
 		default:
 			return 0;
 		}		
-		for (LineaFactura l : this.lineas)
-			result+=l.getImporte();
-		result=Factura.redondear(result);
+		if(this.lineas != null){
+			for (LineaFactura l : this.lineas)
+				result+=l.getImporte();
+			result=Factura.redondear(result);
+		}		
 		return result;
 	}
 

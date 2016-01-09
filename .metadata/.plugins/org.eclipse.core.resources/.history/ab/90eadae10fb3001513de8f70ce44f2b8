@@ -1,0 +1,63 @@
+package edu.uclm.esi.iso3.llamadas.procesador.dominio;
+
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
+import edu.uclm.esi.iso3.llamadas.procesador.gui.IVentana;
+
+
+public class ProcesadorDeLlamadas implements Runnable {
+	private String directorio;
+	private IVentana ventana;
+
+	public ProcesadorDeLlamadas(String directorio, IVentana v) {
+		this.directorio=directorio;
+		this.ventana=v;
+	}
+	
+	@Override
+	public void run() {
+		String[] ficheros=this.leerFicheros();
+		if (ficheros!=null && ficheros.length>0) {
+			procesar(ficheros);
+		} else {
+			this.ventana.setProgresoMaximo(100);
+			this.ventana.showProgreso(100);
+		}
+		this.ventana.showInfo("Proceso terminado. Se procesaron " + ficheros.length + " llamadas.");
+	}
+	
+	private void procesar(String[] ficheros) {
+		int total=ficheros.length;
+		int cont=1;
+		this.ventana.setProgresoMaximo(total);
+		for (String fichero : ficheros) {
+			try {
+				Factura.procesarLlamada(this.directorio, fichero, this.ventana);
+				this.ventana.showProgreso(cont++);
+			} catch (Exception e) {
+				this.ventana.showError(e.toString());
+			}
+		}
+	}
+	
+	private void procesarClientesSinLlamada() throws IOException{
+		FileInputStream fis=new FileInputStream(this.directorio + "/clientes.txt");
+		DataInputStream dis = new DataInputStream(fis);
+		BufferedReader br = new BufferedReader(new InputStreamReader(dis));
+		String linea;
+		while((linea = br.readLine()) != null)
+	}
+	
+	private String[] leerFicheros() {
+		File f = new File(this.directorio + Constantes.llamadasRecibidas);
+		String[] result = f.list();
+		return result;
+	}
+
+}

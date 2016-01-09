@@ -116,9 +116,9 @@ public class TestCobramosDeMas extends TestCase implements IVentana {
 		assertTrue("Esperaba: " + esperado + "; obtenido: " + obtenido, obtenido==esperado);
 	}
 	
-	public void testTardesClienteQueNoConsume() {
+	public void testTardesClienteQueNoConsume() throws IOException {
 		// Comprobamos que se ha creado el fichero de factura
-		Factura factura=null;
+		Factura factura = null;
 		String fileName=this.directorioRaiz + Constantes.facturas + clienteTardes.getTelefono() + ".txt";
 		try {
 			FileInputStream fis=new FileInputStream(fileName);
