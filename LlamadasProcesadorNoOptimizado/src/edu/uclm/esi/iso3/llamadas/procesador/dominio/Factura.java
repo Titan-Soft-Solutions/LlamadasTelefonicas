@@ -179,7 +179,11 @@ public class Factura implements Serializable {
 			result+=l.getDuracion();
 		return result;
 	}
+	public double getImporteSinIVA(){
+		return new TarifasActuales().getImporteSinIVA(this.cliente, this.lineas);
+	}
 
+/**
 	public double getImporteSinIVA() {
 		double result=0;
 		switch (cliente.getTarifa()) {
@@ -205,7 +209,7 @@ public class Factura implements Serializable {
 		}		
 		return result;
 	}
-
+*/
 	public static double redondear(double x) {
 			return Math.rint(x*100)/100;
 	}
