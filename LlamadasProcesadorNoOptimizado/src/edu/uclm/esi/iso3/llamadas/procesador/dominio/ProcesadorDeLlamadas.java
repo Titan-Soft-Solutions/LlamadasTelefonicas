@@ -18,12 +18,12 @@ public class ProcesadorDeLlamadas implements Runnable {
 	public ProcesadorDeLlamadas(String directorio, IVentana v) {
 		this.directorio=directorio;
 		this.ventana=v;
-		try {
+		/*try {
 			procesarClientesSinLlamada();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
 	}
 	
 	@Override

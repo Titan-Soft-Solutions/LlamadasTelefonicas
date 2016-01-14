@@ -1,8 +1,9 @@
 package edu.uclm.esi.iso3.llamadas.procesador.dominio;
 
+import java.io.Serializable;
 import java.util.Vector;
 
-abstract class Tarifas {
+abstract class Tarifas implements Serializable {
 
 
 	protected double FIJO_PLANA = 250;

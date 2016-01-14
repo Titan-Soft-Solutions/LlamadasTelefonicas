@@ -1,9 +1,10 @@
 package edu.uclm.esi.iso3.llamadas.procesador.dominio;
 
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Vector;
 
-public class TarifasActuales extends Tarifas{
+public class TarifasActuales extends Tarifas implements Serializable{
 	
 	public TarifasActuales(){}
 	
