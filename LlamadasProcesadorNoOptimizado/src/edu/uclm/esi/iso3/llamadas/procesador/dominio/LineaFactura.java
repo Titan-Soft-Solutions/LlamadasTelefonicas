@@ -10,15 +10,13 @@ public class LineaFactura implements Serializable {
 	private int duracionHoras, duracionMinutos, duracionSegundos;
 	private Factura factura;
 	private double importe;
-	private Tarifas tarifa;
 
 	public LineaFactura(Factura factura, Llamada call) {
 		this.fecha=call.getFecha();
 		this.numeroDestino=call.getDestino();
 		setDuracion(call.getDuracion());
 		this.factura=factura;
-		this.tarifa = new TarifasActuales();
-		this.importe=Factura.redondear(this.tarifa.getCoste(this.factura, call));
+		this.importe=Factura.redondear(this.factura.getCoste(this.factura, call));
 	}
 	
 	private void setDuracion(int duracion) {

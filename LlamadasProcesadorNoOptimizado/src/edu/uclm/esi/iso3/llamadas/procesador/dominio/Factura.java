@@ -18,6 +18,7 @@ import edu.uclm.esi.iso3.llamadas.procesador.gui.IVentana;
 public class Factura implements Serializable {
 	private Cliente cliente;
 	private Vector<LineaFactura> lineas;
+	private Tarifas tarifa;
 	
 	private transient static String directorio;
 	
@@ -29,6 +30,21 @@ public class Factura implements Serializable {
 		ObjectOutputStream oos=new ObjectOutputStream(fos);
 		oos.writeObject(this);
 		fos.close();
+		
+		switch(cliente.getTarifa()){
+		case Constantes.PLANA:
+			tarifa = new TarifaPlana();
+			break;
+		case Constantes.CINCUENTA_MINUTOS:
+			tarifa = new TarifaCincuentaMinutos();
+			break;
+		case Constantes.FIN_DE_SEMANA:
+			tarifa = new TarifaFinDeSemana();
+			break;
+		case Constantes.TARDES:
+			tarifa = new TarifaTardes();
+			break;
+		}
 	}
 
 	public Factura(Llamada call) throws IOException {
@@ -39,6 +55,21 @@ public class Factura implements Serializable {
 		ObjectOutputStream oos=new ObjectOutputStream(fos);
 		oos.writeObject(this);
 		fos.close();
+		
+		switch(cliente.getTarifa()){
+		case Constantes.PLANA:
+			tarifa = new TarifaPlana();
+			break;
+		case Constantes.CINCUENTA_MINUTOS:
+			tarifa = new TarifaCincuentaMinutos();
+			break;
+		case Constantes.FIN_DE_SEMANA:
+			tarifa = new TarifaFinDeSemana();
+			break;
+		case Constantes.TARDES:
+			tarifa = new TarifaTardes();
+			break;
+		}
 	}
 
 	public Factura(String directorio, Llamada call) {
@@ -180,7 +211,7 @@ public class Factura implements Serializable {
 		return result;
 	}
 	public double getImporteSinIVA(){
-		return new TarifasActuales().getImporteSinIVA(this.cliente, this.lineas);
+		return tarifa.getImporteSinIVA(this.cliente, this.lineas);
 	}
 
 /**
@@ -219,6 +250,10 @@ public class Factura implements Serializable {
 	}
 
 	public double getCoste(Factura factura, Llamada call) {
+		return tarifa.getCoste(factura,call);
+	}
+/**
+	public double getCoste(Factura factura, Llamada call) {
 		if (cliente.getTarifa()==Constantes.PLANA) {
 			return 0.15;
 		} 
@@ -255,5 +290,5 @@ public class Factura implements Serializable {
 		}
 		return 0;
 	}
-
+*/
 }
