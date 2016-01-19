@@ -15,8 +15,10 @@ public class TarifaCincuentaMinutos extends Tarifas implements Serializable{
 	public double getImporteSinIVA(Cliente cliente, Vector<LineaFactura> lineas) {
 		double result = FIJO_CINCUENTA_MINUTOS;
 		
-		for (LineaFactura l : lineas)
-			result += l.getImporte();
+		if(lineas != null){
+			for (LineaFactura l : lineas)
+				result += l.getImporte();
+		}	
 		
 		return Factura.redondear(result);
 	}

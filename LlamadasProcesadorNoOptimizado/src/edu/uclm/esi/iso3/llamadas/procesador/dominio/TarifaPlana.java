@@ -15,9 +15,10 @@ public class TarifaPlana extends Tarifas implements Serializable{
 		
 		double result = FIJO_PLANA;
 
-		for (LineaFactura l : lineas)
-			result += l.getImporte();
-		
+		if(lineas != null){
+			for (LineaFactura l : lineas)
+				result += l.getImporte();
+		}		
 		return Factura.redondear(result);
 	}
 	

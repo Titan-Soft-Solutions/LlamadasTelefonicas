@@ -27,7 +27,7 @@ import edu.uclm.esi.iso3.llamadas.procesador.gui.IVentana;
 
 
 public class TestCobramosDeMas extends TestCase implements IVentana {
-	private String directorioRaiz="C:\\Users\\duende\\workspace\\LlamadasTelefonicas\\resources";
+	private String directorioRaiz="C:\\resources";
 	private Cliente clienteTarifaPlana, cliente50Minutos, clienteFinDeSemana, clienteTardes;
 	private ProcesadorDeLlamadas procesador;
 

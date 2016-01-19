@@ -24,12 +24,7 @@ public class Factura implements Serializable {
 	
 	public Factura(Cliente cli) throws IOException{
 		this.cliente=cli;
-		this.lineas=new Vector<LineaFactura>();
-		String fichero=Factura.directorio + Constantes.facturas + cli.getTelefono() + ".txt";
-		FileOutputStream fos=new FileOutputStream(fichero);
-		ObjectOutputStream oos=new ObjectOutputStream(fos);
-		oos.writeObject(this);
-		fos.close();
+		this.lineas=new Vector<LineaFactura>();		
 		
 		switch(cliente.getTarifa()){
 		case Constantes.PLANA:
@@ -45,31 +40,40 @@ public class Factura implements Serializable {
 			tarifa = new TarifaTardes();
 			break;
 		}
+		
+		String fichero=Factura.directorio + Constantes.facturas + cli.getTelefono() + ".txt";
+		FileOutputStream fos=new FileOutputStream(fichero);
+		ObjectOutputStream oos=new ObjectOutputStream(fos);
+		oos.writeObject(this);
+		fos.close();
 	}
 
 	public Factura(Llamada call) throws IOException {
 		this.cliente=Control.getControl(this.directorio).findClienteByNumero(call.getOrigen());
 		this.lineas=new Vector<LineaFactura>();
+		
+		switch(cliente.getTarifa()){
+		case Constantes.PLANA:
+			tarifa = new TarifaPlana();
+			break;
+		case Constantes.CINCUENTA_MINUTOS:
+			tarifa = new TarifaCincuentaMinutos();
+			break;
+		case Constantes.FIN_DE_SEMANA:
+			tarifa = new TarifaFinDeSemana();
+			break;
+		case Constantes.TARDES:
+			tarifa = new TarifaTardes();
+			break;
+		}
+		
 		String fichero=Factura.directorio + Constantes.facturas + call.getOrigen() + ".txt";
 		FileOutputStream fos=new FileOutputStream(fichero);
 		ObjectOutputStream oos=new ObjectOutputStream(fos);
 		oos.writeObject(this);
 		fos.close();
 		
-		switch(cliente.getTarifa()){
-		case Constantes.PLANA:
-			tarifa = new TarifaPlana();
-			break;
-		case Constantes.CINCUENTA_MINUTOS:
-			tarifa = new TarifaCincuentaMinutos();
-			break;
-		case Constantes.FIN_DE_SEMANA:
-			tarifa = new TarifaFinDeSemana();
-			break;
-		case Constantes.TARDES:
-			tarifa = new TarifaTardes();
-			break;
-		}
+		
 	}
 
 	public Factura(String directorio, Llamada call) {
@@ -107,43 +111,21 @@ public class Factura implements Serializable {
 	}
 
 	public static void procesarLlamada(String directorioRaiz, String fichero, IVentana ventana) throws IOException, ClassNotFoundException {
+		
 		Factura.directorio=directorioRaiz;
-
-		//PARTE1
-		long initTime=System.currentTimeMillis();
 		mover(directorioRaiz, fichero);
 		
 		FileInputStream fis=new FileInputStream(directorioRaiz + Constantes.llamadasProcesadas + fichero);
 		ObjectInputStream ois=new ObjectInputStream(fis);
 		Llamada call=(Llamada) ois.readObject();
 		fis.close();
-		long endTime=System.currentTimeMillis();
-		System.out.println("ProcesarLlamadas 1: "+(endTime-initTime)+" milesimas");
 		
-		
-		//PARTE 2
-		initTime=System.currentTimeMillis();
-		//Cliente cliente=Control.getControl(directorioRaiz).findClienteByNumero(call.getOrigen());
 		Control col = Control.getControl(directorioRaiz);
-		endTime=System.currentTimeMillis();
-		System.out.println("ProcesarLlamadas 2-1: "+(endTime-initTime)+" milesimas");
-		
-		initTime=System.currentTimeMillis();
 		Cliente cliente = col.findClienteByNumero(call.getOrigen());
-		endTime=System.currentTimeMillis();
-		System.out.println("ProcesarLlamadas 2-2: "+(endTime-initTime)+" milesimas");
-		
-		//PARTE 3
-		initTime=System.currentTimeMillis();
 		Factura f=tieneFactura(directorioRaiz, cliente);
 		if (f==null) {
 			f=new Factura(call);
 		}
-		endTime=System.currentTimeMillis();
-		System.out.println("ProcesarLlamadas 3: "+(endTime-initTime)+" milesimas");
-		
-		//PARTE 4
-		initTime=System.currentTimeMillis();
 		ventana.showInfo(call.toString());
 		f.add(call);
 		
@@ -152,9 +134,6 @@ public class Factura implements Serializable {
 		ObjectOutputStream oos=new ObjectOutputStream(fos);
 		oos.writeObject(f);
 		fos.close();
-		endTime=System.currentTimeMillis();
-		System.out.println("ProcesarLlamadas 4: "+(endTime-initTime)+" milesimas\n");
-		System.out.println("======================================================");
 	}
 	
 	public static void procesarFacturasSinLlamadas(String directorioRaiz, Cliente cli) throws IOException{	
@@ -165,12 +144,6 @@ public class Factura implements Serializable {
 
 	private void add(Llamada call) {
 		LineaFactura linea=new LineaFactura(this, call);
-		System.out.println("importe"+linea.getImporte());
-		
-		//AGREGADOS PRINTLN PARA PODER TRAZAR MEJOR EL COMPORTAMIENTO DEL PROGRAMA
-		System.out.println(call.getFecha().getTime().toString());
-		System.out.println(linea.getImporte());
-		/////////////////////////////////////////////////////////////////////////
 		this.lineas.add(linea);
 	}
 
@@ -214,33 +187,6 @@ public class Factura implements Serializable {
 		return tarifa.getImporteSinIVA(this.cliente, this.lineas);
 	}
 
-/**
-	public double getImporteSinIVA() {
-		double result=0;
-		switch (cliente.getTarifa()) {
-		case Constantes.PLANA :
-			result=250;
-			break;
-		case Constantes.CINCUENTA_MINUTOS :
-			result=15;
-			break;
-		case Constantes.FIN_DE_SEMANA :
-			result=25;
-			break;
-		case Constantes.TARDES :
-			result=25;
-			break;
-		default:
-			return 0;
-		}		
-		if(this.lineas != null){
-			for (LineaFactura l : this.lineas)
-				result+=l.getImporte();
-			result=Factura.redondear(result);
-		}		
-		return result;
-	}
-*/
 	public static double redondear(double x) {
 			return Math.rint(x*100)/100;
 	}
@@ -252,43 +198,4 @@ public class Factura implements Serializable {
 	public double getCoste(Factura factura, Llamada call) {
 		return tarifa.getCoste(factura,call);
 	}
-/**
-	public double getCoste(Factura factura, Llamada call) {
-		if (cliente.getTarifa()==Constantes.PLANA) {
-			return 0.15;
-		} 
-		if (cliente.getTarifa()==Constantes.CINCUENTA_MINUTOS) {
-			double result=0.15;//MODIFICACION, ORIGINALMENTE SUMABA 10 CENTS DE ESTABLECIMIENTO
-			int tiempoTotal=factura.getTiempoTotal();
-			if (cliente.getTarifa()==Constantes.CINCUENTA_MINUTOS && tiempoTotal>=60*50) {
-				result+=0.01*call.getDuracion();
-			} else if (cliente.getTarifa()==Constantes.CINCUENTA_MINUTOS && tiempoTotal<60*50) {
-				result+=0;//PARA OPTIMIZACION QUITAR TODO EL ELSE
-			}
-			return result;
-		}
-		if (cliente.getTarifa()==Constantes.FIN_DE_SEMANA) {
-			int diaSemana=call.getFecha().get(Calendar.DAY_OF_WEEK);
-			double result=0;
-			if (cliente.getTarifa()==Constantes.FIN_DE_SEMANA && diaSemana==Calendar.SUNDAY) {
-				result=0;
-			} 
-			if (cliente.getTarifa()==Constantes.FIN_DE_SEMANA && diaSemana==Calendar.SATURDAY) {
-				result=0;
-			} else
-			//if (cliente.getTarifa()==Constantes.FIN_DE_SEMANA && diaSemana!=Calendar.SATURDAY || diaSemana!=Calendar.SUNDAY) {
-			if (cliente.getTarifa()==Constantes.FIN_DE_SEMANA && diaSemana!=Calendar.SATURDAY && diaSemana!=Calendar.SUNDAY) {
-				result= 0.35+0.01*call.getDuracion();
-			}
-			return result;
-		}
-		if (cliente.getTarifa()==Constantes.TARDES) {
-			int hora=call.getFecha().get(Calendar.HOUR_OF_DAY);
-			if (hora>=16)
-				return 0;
-			return 0.30+0.08*call.getDuracion();
-		}
-		return 0;
-	}
-*/
 }

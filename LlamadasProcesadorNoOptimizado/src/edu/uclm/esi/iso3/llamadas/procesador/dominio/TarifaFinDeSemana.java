@@ -15,8 +15,10 @@ public class TarifaFinDeSemana extends Tarifas implements Serializable{
 	public double getImporteSinIVA(Cliente cliente, Vector<LineaFactura> lineas) {
 		double result= FIJO_FIN_DE_SEMANA;
 		
-		for (LineaFactura l : lineas)
-			result += l.getImporte();
+		if(lineas != null){
+			for (LineaFactura l : lineas)
+				result += l.getImporte();
+		}	
 		
 		return Factura.redondear(result);
 	}

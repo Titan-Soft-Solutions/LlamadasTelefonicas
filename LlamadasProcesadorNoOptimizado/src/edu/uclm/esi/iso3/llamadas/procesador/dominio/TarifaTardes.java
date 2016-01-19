@@ -15,8 +15,10 @@ public class TarifaTardes extends Tarifas implements Serializable{
 	public double getImporteSinIVA(Cliente cliente, Vector<LineaFactura> lineas) {
 		double result = FIJO_TARDES;
 		
-		for (LineaFactura l : lineas)
-			result += l.getImporte();
+		if(lineas != null){
+			for (LineaFactura l : lineas)
+				result += l.getImporte();
+		}
 		
 		return Factura.redondear(result);
 	}
